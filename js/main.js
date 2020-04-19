@@ -1,6 +1,9 @@
+// import { LocationPreview } from './services/location-preview.js';
+
+
 const DUMMY_LOCATIONS = [
     {id: 'A1',
-    name: 'Ramat Gan',
+    address: 'Ramat Gan',
     position: {lat: 29.550431, lng: 34.956870}
     }
 ];
@@ -13,11 +16,12 @@ function onInit() {
     renderMap(); 
 }
 
-function renerTable(){
+function renderTable() {
     const elTableBody = document.querySelector('tbody');
     elTableBody.innerHTML = '';
     var locations = DUMMY_LOCATIONS;
-    locations.forEach( () => {
+    console.log(locations);
+    locations.forEach( (location) => {
         const locationPreview = new LocationPreview(location);
         const elLocation = locationPreview.render();
         elTableBody.appendChild(elLocation);
@@ -62,6 +66,14 @@ function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
                 console.log (ans)
                 addMarker(lat, lng, ans)
 
+
+    // gMap.addListener('click', function (ev) {
+    //     document.querySelector('.input-name-modal').hidden = false;
+    //     document.querySelector('input[name="place-lat"]').value = ev.latLng.lat();
+    //     document.querySelector('input[name="place-lng"]').value = ev.latLng.lng();
+    // });
+
+    // addMarker('XXX', lat, lng, 'Eilat')
             })
     })
     //Adding the goto my location control on the map

@@ -1,29 +1,44 @@
 
-export class TodoPreview {
-    constructor(location){
+class LocationPreview {
+    constructor(location, onDeleteLocation, onGoToLocation){
         this.location = location;
+        this.onDeleteLocation = onDeleteLocation;
+        this.onGoToLocation = onGoToLocation;
     }
     render() {
         const location = this.location;
-
         var elLocation = document.createElement('tr');
-        // elTodo.addEventListener('click', ()=>{
-        //     console.log('LI CLICKED', todo.id);
-        //     this.onTodoClicked(todo.id)
-        // })
-        
-        var elBtnDelete = document.createElement('button');
-        elBtnDelete.classList.add('btn-delete');
-        elBtnDelete.innerHTML = '&times'
-        elBtnDelete.addEventListener('click', (ev)=>{
-            console.log('Hey', todo.id);
-            this.onDeleteTodo(location.id, ev)
-        })
 
-        elTodo.appendChild(elBtnDelete)
-        var elP = document.createElement('p');
-        elP.innerText = todo.txt;
-        elTodo.appendChild(elP)
-        return elTodo;
+            var elTdId = document.createElement('td');
+            elTdId.innerText = location.id;
+            elLocation.appendChild(elTdId);
+        
+            var elTdInfo = document.createElement('td');
+            elTdInfo.innerText = location.address;
+            elLocation.appendChild(elTdInfo);
+
+            var elTdActions = document.createElement('td');
+        
+                var elBtnDelete = document.createElement('button');
+                elBtnDelete.classList.add('btn-delete');
+                elBtnDelete.innerHTML = 'Delete';
+                elBtnDelete.addEventListener('click', (ev)=>{
+                console.log('Hey', location.id);
+                this.onDeleteLocation(location.id, ev)
+                })
+                elTdActions.appendChild(elBtnDelete);
+
+                var elBtnGoTo = document.createElement('button');
+                elBtnGoTo.classList.add('btn-go-to');
+                elBtnGoTo.innerHTML = 'Go to';
+                elBtnGoTo.addEventListener('click', (ev)=>{
+                console.log('Hey', location.position);
+                this.onGoToLocation(location.position, ev)
+                })
+                elTdActions.appendChild(elBtnGoTo);
+
+            elLocation.appendChild(elTdActions)
+            
+        return elLocation;
     }
 }
