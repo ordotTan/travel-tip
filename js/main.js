@@ -1,5 +1,8 @@
-// import { LocationPreview } from './services/location-preview.js';
-
+import {LocationPreview} from './cmps/location-preview.js';
+import {mapService} from './services/map-service.js';
+// export const removeMarkerService = {
+//     removeMarker
+// };
 
 const DUMMY_LOCATIONS = [
     {
@@ -32,9 +35,9 @@ function bindEvents() {
 function onSearch() {
     const elInput = document.querySelector('input');
     const address = elInput.value;
-    getLatLng(address)
+    mapService.getLatLng(address)
         .then(ans => {
-            var locationId = addLocation(address, ans.lat, ans.lng);
+            var locationId = mapService.addLocation(address, ans.lat, ans.lng);
             addMarker(locationId, ans.lat, ans.lng, address)
             gCurrentLocation = { lat: ans.lat, lng: ans.lng }
             renderTable()
@@ -45,7 +48,7 @@ function onSearch() {
 function renderTable() {
     const elTableBody = document.querySelector('tbody');
     elTableBody.innerHTML = '';
-    var locations = getLocations()
+    var locations = mapService.getLocations()
     console.log(locations);
     locations.forEach((location) => {
         const locationPreview = new LocationPreview(location, onDeleteLocation, onGoToLocation);
@@ -64,6 +67,7 @@ function renderMap() {
 }
 
 function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
+    gCurrentLocation = {lat , lng};
     var elMap = document.querySelector('#map');
     var options = {
         center: { lat, lng },
@@ -88,9 +92,9 @@ function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
     gMap.addListener('click', function (ev) {
         const lat = ev.latLng.lat()
         const lng = ev.latLng.lng()
-        getAddressName(lat, lng)
+        mapService.getAddressName(lat, lng)
             .then(ans => {
-                var locationId = addLocation(ans, lat, lng);
+                var locationId = mapService.addLocation(ans, lat, lng);
                 addMarker(locationId, lat, lng, ans)
                 gCurrentLocation = { lat, lng }
                 renderTable()
@@ -159,13 +163,14 @@ function gotoUserLoc() {
 function setUserPos(position) {
     const lat = +position.coords.latitude
     const lng = +position.coords.longitude;
+    console.log('lat', lat, 'lng', lng)
     gMap.setCenter({ lat, lng });
     gMap.setZoom(18)
-    addMarker(lat, lng, 'Home', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')
-    getAddressName(lat, lng)
+    // addMarker(lat, lng, 'Home', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')
+    mapService.getAddressName(lat, lng)
         .then(ans => {
-            addMarker(lat, lng, ans)
-            addLocation(ans, lat, lng)
+            var locationId = mapService.addLocation(ans, lat, lng);
+            addMarker(locationId, lat, lng, ans)
             gCurrentLocation = { lat, lng }
             renderTable()
         })
@@ -201,8 +206,12 @@ function onGoToLocation(location) {
 
 
 function onDeleteLocation(locationId) {
-    deleteLocation(locationId);
+    mapService.deleteLocation(locationId);
     renderTable();
+    var markerIdx = gMarkers.findIndex((marker) => {
+        return marker.id === locationId;
+    })
+   removeMarker(gMarkers[markerIdx].id)
 }
 
 
@@ -223,6 +232,7 @@ function onCopyLocation() {
     document.execCommand("copy");
 
 }
+
 function removeMarker(placeId) {
     const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
     gMarkers[markerIdx].setMap(null)
@@ -231,13 +241,19 @@ function removeMarker(placeId) {
 
 function setMapInitialPos() {
     const urlParams = new URLSearchParams(window.location.search);
-    const lat = +urlParams.get('lat');
-    const lng = +urlParams.get('lng');
-    if (lat === 0 & lng === 0) {
+    let lat = +urlParams.get('lat');
+    let lng = +urlParams.get('lng');
+    if (lat === 0 && lng === 0) {
         lat = 32.0717001153281
         lng = 34.7991300499871
     }
     gMap.setCenter({ lat, lng });
-    gMap.setZoom(18)
-
-}
+    gMap.setZoom(18);
+    mapService.getAddressName(lat, lng)
+        .then(ans => {
+            var locationId = mapService.addLocation(ans, lat, lng);
+            addMarker(locationId, lat, lng, ans)
+            gCurrentLocation = { lat, lng }
+            renderTable()
+        })
+    }
