@@ -23,7 +23,7 @@ class LocationPreview {
                 elBtnDelete.classList.add('btn-delete');
                 elBtnDelete.innerHTML = 'Delete';
                 elBtnDelete.addEventListener('click', (ev)=>{
-                console.log('Hey', location.id);
+                //console.log('Hey', location.id);
                 this.onDeleteLocation(location.id, ev)
                 })
                 elTdActions.appendChild(elBtnDelete);

@@ -12,34 +12,43 @@ const DUMMY_LOCATIONS = [
 var gMap
 var gMarkers = []
 var gMarkerId = 1
+var gCurrentLocation
+
+window.addEventListener('load', onInit)
+
 
 function onInit() {
+    bindEvents();
     renderMap();
+    setMapInitialPos()
 }
 
-document.querySelector('.btn-search').addEventListener('click', onSearch);
+function bindEvents() {
+    document.querySelector('.btn-copy-loc').addEventListener('click', onCopyLocation)
+    document.querySelector('.btn-search').addEventListener('click', onSearch);
+}
 
-function onSearch(){
+
+function onSearch() {
     const elInput = document.querySelector('input');
     const address = elInput.value;
     getLatLng(address)
-    .then(ans => {
-        console.log(ans)
-        var locationId = addLocation(address, ans.lat, ans.lng);
-        addMarker(locationId, ans.lat, ans.lng, address)
-        renderTable()
-        onGoToLocation({lat: ans.lat, lng: ans.lng})
-    })
+        .then(ans => {
+            var locationId = addLocation(address, ans.lat, ans.lng);
+            addMarker(locationId, ans.lat, ans.lng, address)
+            gCurrentLocation = { lat: ans.lat, lng: ans.lng }
+            renderTable()
+            onGoToLocation({ lat: ans.lat, lng: ans.lng })
+        })
 }
 
 function renderTable() {
     const elTableBody = document.querySelector('tbody');
     elTableBody.innerHTML = '';
-    //var locations = DUMMY_LOCATIONS;
     var locations = getLocations()
     console.log(locations);
     locations.forEach((location) => {
-        const locationPreview = new LocationPreview(location,onDeleteLocation,onGoToLocation);
+        const locationPreview = new LocationPreview(location, onDeleteLocation, onGoToLocation);
         const elLocation = locationPreview.render();
         elTableBody.appendChild(elLocation);
     });
@@ -54,7 +63,7 @@ function renderMap() {
     initMap();
 }
 
-function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
+function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
     var elMap = document.querySelector('#map');
     var options = {
         center: { lat, lng },
@@ -81,9 +90,9 @@ function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
         const lng = ev.latLng.lng()
         getAddressName(lat, lng)
             .then(ans => {
-                console.log(ans)
                 var locationId = addLocation(ans, lat, lng);
                 addMarker(locationId, lat, lng, ans)
+                gCurrentLocation = { lat, lng }
                 renderTable()
             })
 
@@ -139,8 +148,6 @@ function gotoUserPosControl(controlDiv) {
     // Setup the click event listeners
     controlUI.addEventListener('click', function () {
         gotoUserLoc()
-        // addLocation(ans,lat,lng)
-        // renderTable()
     });
 
 }
@@ -150,8 +157,8 @@ function gotoUserLoc() {
 }
 
 function setUserPos(position) {
-    const lat = position.coords.latitude
-    const lng = position.coords.longitude;
+    const lat = +position.coords.latitude
+    const lng = +position.coords.longitude;
     gMap.setCenter({ lat, lng });
     gMap.setZoom(18)
     addMarker(lat, lng, 'Home', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')
@@ -159,6 +166,7 @@ function setUserPos(position) {
         .then(ans => {
             addMarker(lat, lng, ans)
             addLocation(ans, lat, lng)
+            gCurrentLocation = { lat, lng }
             renderTable()
         })
 }
@@ -185,7 +193,6 @@ function handleLocationError(error) {
 
 
 function onGoToLocation(location) {
-    console.log(location)
     const lat = location.lat
     const lng = location.lng
     gMap.setCenter({ lat, lng })
@@ -198,8 +205,39 @@ function onDeleteLocation(locationId) {
     renderTable();
 }
 
+
+function onCopyLocation() {
+    if (!gCurrentLocation) {
+        return
+    }
+    const lat = gCurrentLocation.lat
+    const lng = gCurrentLocation.lng
+    const urlToCopy = `${window.location.origin}?lat=${lat}&lng=${lng}`
+    document.querySelector('.loc-place-holder').value = urlToCopy
+
+    /* Select the text field */
+    const copyText = document.querySelector('.loc-place-holder')
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+
+}
 function removeMarker(placeId) {
     const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
     gMarkers[markerIdx].setMap(null)
     gMarkers.splice(markerIdx, 1)
+}
+
+function setMapInitialPos() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const lat = +urlParams.get('lat');
+    const lng = +urlParams.get('lng');
+    if (lat === 0 & lng === 0) {
+        lat = 32.0717001153281
+        lng = 34.7991300499871
+    }
+    gMap.setCenter({ lat, lng });
+    gMap.setZoom(18)
+
 }

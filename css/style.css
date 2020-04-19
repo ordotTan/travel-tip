@@ -12,6 +12,7 @@ img {
     width:40px;
 }
 
+
 .container{
   display: flex;
 }
@@ -42,4 +43,8 @@ td{
 
 .btn-delete{
   margin-left: 1px;
+}
+
+.loc-place-holder {
+    opacity: 0;
 }
