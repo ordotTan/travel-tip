@@ -1,3 +1,7 @@
+*{
+  box-sizing: border-box;
+}
+
 #map {
     height: 0%;
     width: 50%;
@@ -6,4 +10,36 @@
 
 img {
     width:40px;
+}
+
+.container{
+  display: flex;
+}
+
+table{
+  width: 50%;
+  padding: 10px;
+}
+
+.map-container{
+  width: 50%;
+}
+
+td{
+  border: 1px solid black;
+  width: 33%;
+}
+
+.btn-delete, .btn-go-to{
+  width: 49%;
+  background-color: rgb(57, 131, 153);
+  border: unset;
+  cursor: pointer;
+  color: white;
+  padding: 1px;
+  border-color: white;
+}
+
+.btn-delete{
+  margin-left: 1px;
 }

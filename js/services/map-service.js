@@ -52,5 +52,4 @@ function deleteLocation(locationId){
         return marker.id === locationId;
     })
     removeMarker(gMarkers[markerIdx].id)
-    gMarkers.splice(markerIdx, 1);
 }
