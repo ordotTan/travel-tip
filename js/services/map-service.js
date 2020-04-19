@@ -27,6 +27,7 @@ function getLatLng(address) {
 function addLocation(address,lat,lng) {
     const location = createLocation (address,lat,lng)
     gLocations.push(location)
+    return location.id;
 }
 
 function createLocation (address,lat,lng) {
@@ -39,4 +40,17 @@ function createLocation (address,lat,lng) {
 
 function getLocations() {
     return gLocations
+}
+
+function deleteLocation(locationId){
+    var locationIdx = gLocations.findIndex((location) => {
+        return location.id === locationId;
+    })
+    gLocations.splice(locationIdx, 1);
+
+    var markerIdx = gMarkers.findIndex((marker) => {
+        return marker.id === locationId;
+    })
+    removeMarker(gMarkers[markerIdx].id)
+    gMarkers.splice(markerIdx, 1);
 }

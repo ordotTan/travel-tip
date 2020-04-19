@@ -17,6 +17,21 @@ function onInit() {
     renderMap();
 }
 
+document.querySelector('.btn-search').addEventListener('click', onSearch);
+
+function onSearch(){
+    const elInput = document.querySelector('input');
+    const address = elInput.value;
+    getLatLng(address)
+    .then(ans => {
+        console.log(ans)
+        var locationId = addLocation(address, ans.lat, ans.lng);
+        addMarker(locationId, ans.lat, ans.lng, address)
+        renderTable()
+        onGoToLocation({lat: ans.lat, lng: ans.lng})
+    })
+}
+
 function renderTable() {
     const elTableBody = document.querySelector('tbody');
     elTableBody.innerHTML = '';
@@ -67,8 +82,8 @@ function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
         getAddressName(lat, lng)
             .then(ans => {
                 console.log(ans)
-                addMarker(lat, lng, ans)
-                addLocation(ans, lat, lng)
+                var locationId = addLocation(ans, lat, lng);
+                addMarker(locationId, lat, lng, ans)
                 renderTable()
             })
 
@@ -80,9 +95,9 @@ function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
     gMap.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(myLocationDiv);
 }
 
-function addMarker(lat, lng, title, iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png') {
+function addMarker(locationId, lat, lng, title, iconUrl = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png') {
     var marker = new google.maps.Marker({
-        id: gMarkerId++,
+        id: locationId,
         position: { lat, lng },
         map: gMap,
         title: title,
@@ -178,6 +193,13 @@ function onGoToLocation(location) {
 }
 
 
-function onDeleteLocation() {
+function onDeleteLocation(locationId) {
+    deleteLocation(locationId);
+    renderTable();
+}
 
+function removeMarker(placeId) {
+    const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
+    gMarkers[markerIdx].setMap(null)
+    gMarkers.splice(markerIdx, 1)
 }
