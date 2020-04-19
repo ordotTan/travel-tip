@@ -1,5 +1,4 @@
 import {utilService} from './utils.js';
-// import {removeMarkerService} from './main.js';
 export const mapService = {
     getAddressName,
     getLatLng,
@@ -7,22 +6,13 @@ export const mapService = {
     getLocations,
     deleteLocation,
     getWeather,
-    // gMarkers
-    // removeMarker
+    deleteLocation
 }
 
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
 const API_KEY_WEATHER = 'cf3131f6e8946b86e553eb5d63bac0be';
 
-// var gMarkers = []
 var gLocations = []
-
-// function removeMarker(placeId) {
-//     const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
-//     gMarkers[markerIdx].setMap(null)
-//     gMarkers.splice(markerIdx, 1)
-// }
-
 
 function getAddressName(lat, lng) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`)
@@ -39,24 +29,32 @@ function getLatLng(address) {
 }
 
 function getWeather(lat, lng){
-    return axios.get(`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY_WEATHER}`)
-    .then(res => {
-        return res.weather.main;
-    });
+    return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY_WEATHER}`)
+        .then(res => {
+            // console.log(res)
+            return res.data.weather[0].description;
+        });
 }
 
 
 function addLocation(address,lat,lng) {
     const location = createLocation (address,lat,lng)
+    getWeather(lat,lng)
+        .then(ans => {
+            // console.log(ans);
+            // console.log(gLocations)
+            location.weather = ans;
+        });
     gLocations.push(location)
     return location.id;
 }
 
-function createLocation (address,lat,lng) {
+function createLocation (address,lat,lng,weather) {
     return {
         id: utilService.makeId(),
         address,
-        position:{lat:lat,lng:lng}
+        position:{lat:lat,lng:lng},
+        weather,
     }
 }
 
@@ -69,9 +67,4 @@ function deleteLocation(locationId){
         return location.id === locationId;
     })
     gLocations.splice(locationIdx, 1);
-
-    // var markerIdx = gMarkers.findIndex((marker) => {
-    //     return marker.id === locationId;
-    // })
-    // removeMarkerService.removeMarker(gMarkers[markerIdx].id)
 }
