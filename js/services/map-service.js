@@ -5,12 +5,14 @@ export const mapService = {
     getLatLng,
     addLocation,
     getLocations,
-    deleteLocation
+    deleteLocation,
+    getWeather,
     // gMarkers
     // removeMarker
 }
 
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
+const API_KEY_WEATHER = 'cf3131f6e8946b86e553eb5d63bac0be';
 
 // var gMarkers = []
 var gLocations = []
@@ -34,6 +36,13 @@ function getLatLng(address) {
         .then(res => {
             return res.data.results[0].geometry.location
         })
+}
+
+function getWeather(lat, lng){
+    return axios.get(`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY_WEATHER}`)
+    .then(res => {
+        return res.weather.main;
+    });
 }
 
 
