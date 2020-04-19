@@ -18,7 +18,7 @@ class LocationPreview {
             elLocation.appendChild(elTdInfo);
 
             var elTdWeather = document.createElement('td');
-            elTdWeather.innerText = location.weather;
+            elTdWeather.innerText = location.weathe;
             elLocation.appendChild(elTdWeather);
 
             var elTdActions = document.createElement('td');
