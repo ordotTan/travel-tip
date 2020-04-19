@@ -28,6 +28,7 @@ function renderTable() {
     });
 }
 
+
 function renderMap() {
     if (!navigator.geolocation) {
         alert("HTML5 Geolocation is not supported in your browser.");
