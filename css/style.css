@@ -7,3 +7,7 @@
 img {
     width:40px;
 }
+
+.loc-place-holder {
+    opacity: 0;
+}

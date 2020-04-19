@@ -63,7 +63,7 @@ function renderMap() {
     initMap();
 }
 
-function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
+function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
     var elMap = document.querySelector('#map');
     var options = {
         center: { lat, lng },
@@ -216,7 +216,7 @@ function onCopyLocation() {
     document.querySelector('.loc-place-holder').value = urlToCopy
 
     /* Select the text field */
-    const copyText=document.querySelector('.loc-place-holder')
+    const copyText = document.querySelector('.loc-place-holder')
     copyText.select();
     copyText.setSelectionRange(0, 99999); /*For mobile devices*/
     /* Copy the text inside the text field */
@@ -233,6 +233,11 @@ function setMapInitialPos() {
     const urlParams = new URLSearchParams(window.location.search);
     const lat = +urlParams.get('lat');
     const lng = +urlParams.get('lng');
+    if (lat === 0 & lng === 0) {
+        lat = 32.0717001153281
+        lng = 34.7991300499871
+    }
     gMap.setCenter({ lat, lng });
     gMap.setZoom(18)
+
 }
