@@ -1,26 +1,15 @@
 import {utilService} from './utils.js';
-// import {removeMarkerService} from './main.js';
 export const mapService = {
     getAddressName,
     getLatLng,
     addLocation,
     getLocations,
     deleteLocation
-    // gMarkers
-    // removeMarker
 }
 
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
 
-// var gMarkers = []
 var gLocations = []
-
-// function removeMarker(placeId) {
-//     const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
-//     gMarkers[markerIdx].setMap(null)
-//     gMarkers.splice(markerIdx, 1)
-// }
-
 
 function getAddressName(lat, lng) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`)
@@ -60,9 +49,4 @@ function deleteLocation(locationId){
         return location.id === locationId;
     })
     gLocations.splice(locationIdx, 1);
-
-    // var markerIdx = gMarkers.findIndex((marker) => {
-    //     return marker.id === locationId;
-    // })
-    // removeMarkerService.removeMarker(gMarkers[markerIdx].id)
 }
