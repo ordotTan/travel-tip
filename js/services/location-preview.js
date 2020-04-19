@@ -32,8 +32,7 @@ class LocationPreview {
                 elBtnGoTo.classList.add('btn-go-to');
                 elBtnGoTo.innerHTML = 'Go to';
                 elBtnGoTo.addEventListener('click', (ev)=>{
-                console.log('Hey', location.position);
-                this.onGoToLocation(location.position, ev)
+                this.onGoToLocation(location.position)
                 })
                 elTdActions.appendChild(elBtnGoTo);
 

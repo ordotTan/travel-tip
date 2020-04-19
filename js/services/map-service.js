@@ -1,10 +1,6 @@
-// place = {
-//     id : 'fdwf3d',
-//     name : "some name",
-//     location : {lat:12.3, lng:43.4}
-// }
-
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
+
+var gLocations = []
 
 // getLatLng('Times Square')
 //     .then(console.log)
@@ -25,4 +21,22 @@ function getLatLng(address) {
         .then(res => {
             return res.data.results[0].geometry.location
         })
+}
+
+
+function addLocation(address,lat,lng) {
+    const location = createLocation (address,lat,lng)
+    gLocations.push(location)
+}
+
+function createLocation (address,lat,lng) {
+    return {
+        id: makeId(),
+        address,
+        position:{lat:lat,lng:lng}
+    }
+}
+
+function getLocations() {
+    return gLocations
 }

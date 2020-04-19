@@ -2,27 +2,29 @@
 
 
 const DUMMY_LOCATIONS = [
-    {id: 'A1',
-    address: 'Ramat Gan',
-    position: {lat: 29.550431, lng: 34.956870}
+    {
+        id: 'A1',
+        address: 'Ramat Gan',
+        position: { lat: 29.550431, lng: 34.956870 }
     }
 ];
 
 var gMap
-var gMarkers = [] 
+var gMarkers = []
 var gMarkerId = 1
 
 function onInit() {
-    renderMap(); 
+    renderMap();
 }
 
 function renderTable() {
     const elTableBody = document.querySelector('tbody');
     elTableBody.innerHTML = '';
-    var locations = DUMMY_LOCATIONS;
+    //var locations = DUMMY_LOCATIONS;
+    var locations = getLocations()
     console.log(locations);
-    locations.forEach( (location) => {
-        const locationPreview = new LocationPreview(location);
+    locations.forEach((location) => {
+        const locationPreview = new LocationPreview(location,onDeleteLocation,onGoToLocation);
         const elLocation = locationPreview.render();
         elTableBody.appendChild(elLocation);
     });
@@ -62,20 +64,14 @@ function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
     gMap.addListener('click', function (ev) {
         const lat = ev.latLng.lat()
         const lng = ev.latLng.lng()
-        getAddressName (lat,lng) 
+        getAddressName(lat, lng)
             .then(ans => {
-                console.log (ans)
+                console.log(ans)
                 addMarker(lat, lng, ans)
-
-
-    // gMap.addListener('click', function (ev) {
-    //     document.querySelector('.input-name-modal').hidden = false;
-    //     document.querySelector('input[name="place-lat"]').value = ev.latLng.lat();
-    //     document.querySelector('input[name="place-lng"]').value = ev.latLng.lng();
-    // });
-
-    // addMarker('XXX', lat, lng, 'Eilat')
+                addLocation(ans, lat, lng)
+                renderTable()
             })
+
     })
     //Adding the goto my location control on the map
     var myLocationDiv = document.createElement('div');
@@ -128,6 +124,8 @@ function gotoUserPosControl(controlDiv) {
     // Setup the click event listeners
     controlUI.addEventListener('click', function () {
         gotoUserLoc()
+        // addLocation(ans,lat,lng)
+        // renderTable()
     });
 
 }
@@ -142,7 +140,12 @@ function setUserPos(position) {
     gMap.setCenter({ lat, lng });
     gMap.setZoom(18)
     addMarker(lat, lng, 'Home', 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png')
-    getAddressName(lat,lng)
+    getAddressName(lat, lng)
+        .then(ans => {
+            addMarker(lat, lng, ans)
+            addLocation(ans, lat, lng)
+            renderTable()
+        })
 }
 
 
@@ -163,4 +166,18 @@ function handleLocationError(error) {
             break;
     }
     return error
+}
+
+
+function onGoToLocation(location) {
+    console.log(location)
+    const lat = location.lat
+    const lng = location.lng
+    gMap.setCenter({ lat, lng })
+    gMap.setZoom(18);
+}
+
+
+function onDeleteLocation() {
+
 }
