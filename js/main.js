@@ -13,8 +13,16 @@ var gMap
 var gMarkers = []
 var gMarkerId = 1
 
+window.addEventListener('load', onInit)
+
+
 function onInit() {
+    bindEvents();
     renderMap();
+}
+
+function bindEvents() {
+    document.querySelector('.btn-copy-loc').addEventListener('click',onCopyLocation)
 }
 
 function renderTable() {
@@ -180,4 +188,14 @@ function onGoToLocation(location) {
 
 function onDeleteLocation() {
 
+}
+
+function onCopyLocation () {
+   // console.log(window.location.search)
+    const urlParams = new URLSearchParams(window.location.search);
+    const lat = urlParams.get('lat');
+    const lng = urlParams.get('lng');
+    console.log('lat',lat,'lng',lng)
+    //const url = `${window.location.href}?lat=30.14&lng=20.63`
+    //window.location.href=url;
 }
