@@ -6,11 +6,11 @@
 
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
 
-    // getAddressName(29.5577, 34.9519)
-    //     .then(console.log)
-
 // getLatLng('Times Square')
 //     .then(console.log)
+
+    // getAddressName(23.4343,56.554)
+    // .then(console.log)
 
 function getAddressName(lat, lng) {
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`)
@@ -26,5 +26,3 @@ function getLatLng(address) {
             return res.data.results[0].geometry.location
         })
 }
-
-
