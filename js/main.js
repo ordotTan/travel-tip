@@ -1,5 +1,5 @@
-import {LocationPreview} from './cmps/location-preview.js';
-import {mapService} from './services/map-service.js';
+import { LocationPreview } from './cmps/location-preview.js';
+import { mapService } from './services/map-service.js';
 
 var gMap
 var gMarkers = []
@@ -24,7 +24,7 @@ function onSearch() {
     const address = elInput.value;
     mapService.getLatLng(address)
         .then(ans => {
-            addNewLocation(address,ans.lat,ans.lng)
+            addNewLocation(address, ans.lat, ans.lng)
             onGoToLocation({ lat: ans.lat, lng: ans.lng })
         })
 }
@@ -48,8 +48,8 @@ function renderMap() {
     initMap();
 }
 
-function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
-    gCurrentLocation = {lat , lng};
+function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13) {
+    gCurrentLocation = { lat, lng };
     var elMap = document.querySelector('#map');
     var options = {
         center: { lat, lng },
@@ -76,7 +76,7 @@ function initMap(lat = 32.0717001153281, lng = 34.7991300499871, zoom = 13 ) {
         const lng = ev.latLng.lng()
         mapService.getAddressName(lat, lng)
             .then(ans => {
-                addNewLocation(ans,lat,lng)
+                addNewLocation(ans, lat, lng)
             })
 
     })
@@ -147,7 +147,7 @@ function setUserPos(position) {
     gMap.setZoom(18)
     mapService.getAddressName(lat, lng)
         .then(ans => {
-            addNewLocation(ans,lat,lng)
+            addNewLocation(ans, lat, lng)
         })
 }
 
@@ -185,12 +185,13 @@ function onDeleteLocation(locationId) {
     var markerIdx = gMarkers.findIndex((marker) => {
         return marker.id === locationId;
     })
-   removeMarker(gMarkers[markerIdx].id)
+    removeMarker(gMarkers[markerIdx].id)
 }
 
 
 function onCopyLocation() {
-    if (!gCurrentLocation) {
+    const locations = mapService.getLocations()
+    if (!gCurrentLocation || locations.length === 0) {
         return
     }
     const lat = gCurrentLocation.lat
@@ -204,6 +205,13 @@ function onCopyLocation() {
     copyText.setSelectionRange(0, 99999); /*For mobile devices*/
     /* Copy the text inside the text field */
     document.execCommand("copy");
+    Swal.fire({
+        position: 'top-middle',
+        icon: 'success',
+        title: 'Location copied to your clipboard',
+        showConfirmButton: false,
+        timer: 2000
+    })
 
 }
 
@@ -225,14 +233,15 @@ function setMapInitialPos() {
     gMap.setZoom(18);
     mapService.getAddressName(lat, lng)
         .then(ans => {
-            addNewLocation(ans,lat,lng)
+            addNewLocation(ans, lat, lng)
         })
-    }
+}
 
-    function addNewLocation(ans,lat,lng) {
-        var locationId = mapService.addLocation(ans, lat, lng);
-            addMarker(locationId, lat, lng, ans)
-            gCurrentLocation = { lat, lng }
-            renderTable()
+function addNewLocation(ans, lat, lng) {
+    var locationId = mapService.addLocation(ans, lat, lng);
+    addMarker(locationId, lat, lng, ans)
+    gCurrentLocation = { lat, lng }
+    document.querySelector('.curr-location-content').innerHTML = 'Location: ' + ans
+    renderTable()
 
-    }
+}
