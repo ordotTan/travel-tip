@@ -17,13 +17,16 @@ export class LocationPreview {
         elTdInfo.innerText = location.address;
         elLocation.appendChild(elTdInfo);
 
+        var elTdWeather = document.createElement('td');
+        elTdWeather.innerText = location.weather;
+        elLocation.appendChild(elTdWeather);
+
         var elTdActions = document.createElement('td');
 
         var elBtnDelete = document.createElement('button');
         elBtnDelete.classList.add('btn-delete');
         elBtnDelete.innerHTML = 'Delete';
         elBtnDelete.addEventListener('click', (ev) => {
-            //console.log('Hey', location.id);
             this.onDeleteLocation(location.id, ev)
         })
         elTdActions.appendChild(elBtnDelete);

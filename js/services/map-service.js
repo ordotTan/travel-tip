@@ -5,8 +5,7 @@ export const mapService = {
     addLocation,
     getLocations,
     deleteLocation,
-    getWeather,
-    deleteLocation
+    getWeather
 }
 
 const API_KEY = `AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0`
@@ -31,20 +30,13 @@ function getLatLng(address) {
 function getWeather(lat, lng){
     return axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY_WEATHER}`)
         .then(res => {
-            // console.log(res)
             return res.data.weather[0].description;
         });
 }
 
 
-function addLocation(address,lat,lng) {
-    const location = createLocation (address,lat,lng)
-    getWeather(lat,lng)
-        .then(ans => {
-            // console.log(ans);
-            // console.log(gLocations)
-            location.weather = ans;
-        });
+function addLocation(address,lat,lng, weather) {
+    const location = createLocation (address,lat,lng, weather)
     gLocations.push(location)
     return location.id;
 }
@@ -54,7 +46,7 @@ function createLocation (address,lat,lng,weather) {
         id: utilService.makeId(),
         address,
         position:{lat:lat,lng:lng},
-        weather,
+        weather
     }
 }
 

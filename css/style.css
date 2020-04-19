@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+body {
+    background-color: whitesmoke;
+}
+
 #map {
     height: 0%;
     width: 50%;
@@ -12,6 +16,23 @@ img {
     width:40px;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+h1 {
+    color:lightseagreen;
+    padding: 0;
+    margin: 0;
+}
+
+input {
+    font-size: 1rem;
+    padding: 10px;
+    width: 200px;
+}
+
 
 .container{
   display: flex;
@@ -19,32 +40,57 @@ img {
 
 table{
   width: 50%;
-  padding: 10px;
+  padding-top: 0px;
+  margin-right: 10px;
 }
 
 .map-container{
   width: 50%;
 }
 
-td{
-  border: 1px solid black;
-  width: 33%;
+th {
+    background-color: lightblue  ;
+    border: 1px solid black;
 }
 
-.btn-delete, .btn-go-to{
-  width: 49%;
+td{
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.btn, .btn-delete, .btn-go-to{
+  padding: 8px;
   background-color: rgb(57, 131, 153);
   border: unset;
   cursor: pointer;
   color: white;
-  padding: 1px;
   border-color: white;
+  margin: 4px;
+  border-radius: 10px;
+  font-size: 0.8rem;
 }
 
-.btn-delete{
-  margin-left: 1px;
+.btn:hover,.btn-delete:hover,.btn-go-to:hover {
+    opacity: 0.7;
+
 }
 
 .loc-place-holder {
     opacity: 0;
+}
+
+.curr-location-content {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.location-bar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.location-bar .btn {
+    margin-left: 10px;
 }

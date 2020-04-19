@@ -9,17 +9,18 @@
 </head>
 <body>
     <header>
-        <logo></logo>
+        <logo>
+            <h1>TravelTip</h1>
+        </logo>
         <div class="search-bar">
-            <input type="text">
-            <button class="btn-search">Go</button>
-            <button>My Location</button>
+            <input type="text" placeholder="Search">
+            <button class="btn btn-search">Go</button>
         </div>
     </header>
 
     <div class="location-bar">
-        <div class="curr-location"></div>
-        <button class="btn-copy-loc">Copy Location</button>
+        <div class="curr-location-content"></div>
+        <button class="btn btn-copy-loc">Copy Location</button>
         <input class="loc-place-holder" type="text">
     </div>
 
@@ -43,7 +44,7 @@
 
     </div>
 
-    
+    <script src="lib/swal.js"></script>
     <script src="lib/axios.js"></script>
     <script type="module" src="js/main.js"></script>
     <script async defer
