@@ -1,4 +1,20 @@
+const DUMMY_LOCATIONS = [
+    {id: 'A1',
+    name: 'Ramat Gan',
+    position: {lat: 29.550431, lng: 34.956870}
+    }
+];
 
+function renerTable(){
+    const elTableBody = document.querySelector('tbody');
+    elTableBody.innerHTML = '';
+    var locations = DUMMY_LOCATIONS;
+    locations.forEach( () => {
+        const locationPreview = new LocationPreview(location);
+        const elLocation = locationPreview.render();
+        elTableBody.appendChild(elLocation);
+    });
+}
 
 function initMap(lat = 29.5577, lng = 34.9519, zoom = 12) {
     var elMap = document.querySelector('#map');
