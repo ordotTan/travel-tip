@@ -8,7 +8,7 @@ export const mapService = {
     getWeather
 }
 
-const API_KEY = ''
+const API_KEY = 'AIzaSyCs6TeFgTlIHNY0RfxI-HZL1lNzrPtviQ0'
 const API_KEY_WEATHER = 'cf3131f6e8946b86e553eb5d63bac0be';
 
 var gLocations = []

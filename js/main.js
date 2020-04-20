@@ -34,10 +34,8 @@ function renderTable() {
     elTableBody.innerHTML = '';
     var locations = mapService.getLocations()
     locations.forEach((location) => {
-        console.log(location);
         const locationPreview = new LocationPreview(location, onDeleteLocation, onGoToLocation);
         const elLocation = locationPreview.render();
-        console.log(elLocation);
         elTableBody.appendChild(elLocation);
     });
 }
@@ -144,7 +142,6 @@ function gotoUserLoc() {
 function setUserPos(position) {
     const lat = +position.coords.latitude
     const lng = +position.coords.longitude;
-    console.log('lat', lat, 'lng', lng)
     gMap.setCenter({ lat, lng });
     gMap.setZoom(18)
     mapService.getAddressName(lat, lng)
@@ -187,7 +184,8 @@ function onDeleteLocation(locationId) {
     var markerIdx = gMarkers.findIndex((marker) => {
         return marker.id === locationId;
     })
-    removeMarker(gMarkers[markerIdx].id)
+    gMarkers[markerIdx].setMap(null)
+    gMarkers.splice(markerIdx, 1)
 }
 
 
@@ -217,12 +215,6 @@ function onCopyLocation() {
 
 }
 
-function removeMarker(placeId) {
-    const markerIdx = gMarkers.findIndex(marker => marker.id === placeId)
-    gMarkers[markerIdx].setMap(null)
-    gMarkers.splice(markerIdx, 1)
-}
-
 function setMapInitialPos() {
     const urlParams = new URLSearchParams(window.location.search);
     let lat = +urlParams.get('lat');
@@ -240,15 +232,13 @@ function setMapInitialPos() {
 }
 
 function addNewLocation(ans, lat, lng) {
-    mapService.getWeather(lat,lng)
+    mapService.getWeather(lat, lng)
         .then(weather => {
             var locationId = mapService.addLocation(ans, lat, lng, weather);
             addMarker(locationId, lat, lng, ans)
             gCurrentLocation = { lat, lng }
             document.querySelector('.curr-location-content').innerHTML = 'Location: ' + ans;
             renderTable()
-            
+
         });
-    }
-
-
+}
